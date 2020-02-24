@@ -1,0 +1,14 @@
+*/Build
+*/Binaries
+*/DerivedDataCache
+*/Intermediate
+*/Saved
+*_BuiltData.uasset
+*.VC.db
+Binaries/
+Intermediate/
+Saved/
+*.ipch
+*.db-wal
+.vs/HordeTest/v16/Browse.VC.opendb
+.vs/HordeTest/v16/Solution.VC.db-shm
