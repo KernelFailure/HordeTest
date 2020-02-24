@@ -7,6 +7,7 @@
 #include "PlayerCharacter.generated.h"
 
 class AWeapon;
+class ABulletProjectile;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -68,5 +69,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void StopFire();
+
+	
 
 };

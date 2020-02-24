@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 class USkeletalMeshComponent;
+class ABulletProjectile;
 
 UCLASS()
 class HORDETEST_API AWeapon : public AActor
@@ -25,6 +26,12 @@ protected:
 	USkeletalMeshComponent* MeshComp;
 
 	virtual void Fire();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	TSubclassOf<ABulletProjectile> ProjectileClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
+	FName WeaponMuzzleSocketName;
 
 public:	
 	// Called every frame

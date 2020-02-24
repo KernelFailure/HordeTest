@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "..\Public\Weapon.h"
+#include "BulletProjectile.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -14,6 +15,7 @@ AWeapon::AWeapon()
 	MeshComp = CreateDefaultSubobject <USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
 
+	WeaponMuzzleSocketName = "MuzzleSocket";
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +28,17 @@ void AWeapon::BeginPlay()
 void AWeapon::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firing!!"));
+	if (ProjectileClass) {
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		//ActorSpawnParams.Instigator = this;
+
+		FVector MuzzleLocation = MeshComp->GetSocketLocation(WeaponMuzzleSocketName);
+
+		FRotator MuzzleRotation = MeshComp->GetSocketRotation(WeaponMuzzleSocketName);
+
+		GetWorld()->SpawnActor<ABulletProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+	}
 }
 
 // Called every frame
