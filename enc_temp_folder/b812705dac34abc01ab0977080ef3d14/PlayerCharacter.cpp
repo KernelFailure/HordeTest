@@ -14,7 +14,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	SpringArmComp = CreateAbstractDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
 
@@ -80,9 +80,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
-	//float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
-	//CameraComp->SetFieldOfView(NewFOV);
+	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
+	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
+	CameraComp->SetFieldOfView(NewFOV);
 }
 
 // Called to bind functionality to input
@@ -100,8 +100,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerCharacter::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APlayerCharacter::StopFire);
 
-	//PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &APlayerCharacter::BeginZoom);
-	//PlayerInputComponent->BindAction("Aim", IE_Released, this, &APlayerCharacter::EndZoom);
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &APlayerCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &APlayerCharacter::EndZoom);
 }
 
 void APlayerCharacter::StartFire()

@@ -60,7 +60,6 @@ protected:
 
 	void EndZoom();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Zooming")
 	bool bWantsToZoom;
 
 	float DefaultFOV;
