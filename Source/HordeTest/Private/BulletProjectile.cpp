@@ -4,6 +4,8 @@
 #include "BulletProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "..\Public\BulletProjectile.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABulletProjectile::ABulletProjectile()
@@ -34,5 +36,24 @@ void ABulletProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABulletProjectile::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	//OtherActor->TakeDamage(BaseDamageTest, )
+	//UE_LOG(LogTemp, Warning, TEXT("Bullet actor overlapped with something"));
+	float BaseDamageTest = 20.0f;
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	FVector NewDirection = GetActorForwardVector();
+	//FVector NewDirection = EyeRotation.Vector();
+	FHitResult Hit;
+	//AController Instigator = GetInstigator();
+	UGameplayStatics::ApplyPointDamage(OtherActor, BaseDamageTest, NewDirection, Hit, nullptr, this, DamageType);
+	
+
+	
 }
 

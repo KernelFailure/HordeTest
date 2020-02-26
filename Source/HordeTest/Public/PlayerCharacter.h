@@ -10,6 +10,7 @@ class AWeapon;
 class ABulletProjectile;
 class UCameraComponent;
 class USpringArmComponent;
+class UHealthComponent;
 
 UCLASS()
 class HORDETEST_API APlayerCharacter : public ACharacter
@@ -29,6 +30,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHealthComponent* HealthComp;
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -70,6 +74,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Zooming", meta = (ClampMin = 0.1, ClampMax = 100))
 	float ZoomInterpSpeed;
+
+	UFUNCTION()
+	void OnHealthChanged(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 public:	
 	// Called every frame

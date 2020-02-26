@@ -7,6 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Weapon.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "HealthComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -20,6 +22,8 @@ APlayerCharacter::APlayerCharacter()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
@@ -36,6 +40,7 @@ void APlayerCharacter::BeginPlay()
 
 	DefaultFOV = CameraComp->FieldOfView;
 
+	// Spawn weapon
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	CurrentWeapon = GetWorld()->SpawnActor<AWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
@@ -44,6 +49,7 @@ void APlayerCharacter::BeginPlay()
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponAttachSocketName);
 	}
 
+	HealthComp->OnHealthChanged.AddDynamic(this, &APlayerCharacter::OnHealthChanged);
 }
 
 void APlayerCharacter::MoveForward(float Value)
@@ -73,6 +79,19 @@ void APlayerCharacter::BeginZoom()
 void APlayerCharacter::EndZoom()
 {
 	bWantsToZoom = false;
+}
+
+void APlayerCharacter::OnHealthChanged(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.0f && !bDied) {
+		UE_LOG(LogTemp, Warning, TEXT("Just died"));
+		bDied = true;
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		DetachFromControllerPendingDestroy();
+		SetLifeSpan(10.0f);
+		//StopFire();
+	}
 }
 
 // Called every frame

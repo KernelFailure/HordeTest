@@ -33,6 +33,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	FName WeaponMuzzleSocketName;
 
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
