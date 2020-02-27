@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "..\Public\Weapon.h"
 #include "BulletProjectile.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -27,6 +28,31 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Fire()
 {
+
+	AActor* MyOwner = GetOwner();
+	if (MyOwner) {
+		FVector EyeLocation;
+		FRotator EyeRotation;
+		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+		FVector AdjustedEyeLocation = EyeLocation + FVector(0.0f, 100.0f, 0.0f);
+		FVector ShotDirection = EyeRotation.Vector();
+		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
+
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(MyOwner);
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.bTraceComplex = true;
+		QueryParams.bReturnPhysicalMaterial = true;
+
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, AdjustedEyeLocation, TraceEnd, ECC_GameTraceChannel1, QueryParams)) {
+			UE_LOG(LogTemp, Warning, TEXT("Line trace hit something"));
+
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DefaultImpactEffect, Hit.ImpactPoint);
+		}
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("Firing!!"));
 	if (ProjectileClass) {
 		FActorSpawnParameters ActorSpawnParams;
