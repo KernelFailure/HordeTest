@@ -95,6 +95,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void StopFire();
 
+	virtual FVector GetPawnViewLocation() const override;
+
 	
 
 };

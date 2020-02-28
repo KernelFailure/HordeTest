@@ -6,6 +6,7 @@
 #include "..\Public\Weapon.h"
 #include "BulletProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -35,7 +36,6 @@ void AWeapon::Fire()
 		FRotator EyeRotation;
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
-		FVector AdjustedEyeLocation = EyeLocation + FVector(0.0f, 100.0f, 0.0f);
 		FVector ShotDirection = EyeRotation.Vector();
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
 
@@ -46,25 +46,17 @@ void AWeapon::Fire()
 		QueryParams.bReturnPhysicalMaterial = true;
 
 		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, AdjustedEyeLocation, TraceEnd, ECC_GameTraceChannel1, QueryParams)) {
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_GameTraceChannel1, QueryParams)) {
 			UE_LOG(LogTemp, Warning, TEXT("Line trace hit something"));
-
-			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DefaultImpactEffect, Hit.ImpactPoint);
+			AActor* HitActor = Hit.GetActor();
+			float TestDamage = 20.0f;
+			UGameplayStatics::ApplyPointDamage(HitActor, TestDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), MyOwner, DamageType);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DefaultImpactEffect, Hit.ImpactPoint);
+			
+			//DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Yellow, false, 1.0f, 0, 1.0f);
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Firing!!"));
-	if (ProjectileClass) {
-		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-		//ActorSpawnParams.Instigator = this;
-
-		FVector MuzzleLocation = MeshComp->GetSocketLocation(WeaponMuzzleSocketName);
-
-		FRotator MuzzleRotation = MeshComp->GetSocketRotation(WeaponMuzzleSocketName);
-
-		GetWorld()->SpawnActor<ABulletProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
-	}
 }
 
 // Called every frame

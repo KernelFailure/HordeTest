@@ -9,6 +9,7 @@
 class USkeletalMeshComponent;
 class ABulletProjectile;
 class UParticleSystem;
+class UDamageType;
 
 UCLASS()
 class HORDETEST_API AWeapon : public AActor
@@ -34,8 +35,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	FName WeaponMuzzleSocketName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	UParticleSystem* DefaultImpactEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	TSubclassOf<UDamageType> DamageType;
 
 
 public:	

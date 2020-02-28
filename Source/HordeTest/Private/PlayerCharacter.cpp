@@ -133,3 +133,15 @@ void APlayerCharacter::StopFire()
 	if (CurrentWeapon) { CurrentWeapon->StopFire(); }
 }
 
+/* 
+This makes sure that when we do our line trace for the weapon that 
+we start aiming from the camera not the player mesh
+*/
+FVector APlayerCharacter::GetPawnViewLocation() const
+{
+	if (CameraComp) {
+		return CameraComp->GetComponentLocation();
+	}
+	return Super::GetPawnViewLocation();
+}
+
