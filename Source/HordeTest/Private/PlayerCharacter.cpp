@@ -31,6 +31,8 @@ APlayerCharacter::APlayerCharacter()
 
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20.0f;
+
+	bGotHit = false;
 }
 
 // Called when the game starts or when spawned
@@ -91,6 +93,9 @@ void APlayerCharacter::OnHealthChanged(UHealthComponent* OwningHealthComp, float
 		DetachFromControllerPendingDestroy();
 		SetLifeSpan(10.0f);
 		//StopFire();
+	}
+	else if (Health >= 0.0f) {
+		bGotHit = true;
 	}
 }
 

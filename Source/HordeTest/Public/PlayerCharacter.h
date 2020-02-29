@@ -81,6 +81,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 	bool bDied;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Hit Reaction")
+	bool bGotHit;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
