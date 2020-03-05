@@ -9,6 +9,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "HealthComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "HordeTest.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -26,6 +27,8 @@ APlayerCharacter::APlayerCharacter()
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 
 	WeaponAttachSocketName = "WeaponSocket";
 
